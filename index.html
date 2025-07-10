@@ -56,9 +56,9 @@
         }
 
         .wrapper {
-            display: flex;
+            position: relative;
+            width: 100%;
             min-height: calc(100vh - 130px);
-            flex-grow: 1;
         }
 
         .sidebar {
@@ -69,30 +69,50 @@
             border-right: 8px solid #000000;
             flex-shrink: 0;
             position: fixed;
+            text-align: center;
             top: 130px;
             left: -380px;
             transition: left 0.3s ease;
             z-index: 100;
+            box-sizing: border-box;
+            padding-bottom: 40px;  
         }
 
-        .page {
-            flex-grow: 1;
+        .sidebar.show {
+            left: 5px !important;
+        }
+        
+                .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: calc(100vh - 130px);
+            box-sizing: border-box;
             padding: 20px;
-            overflow-y: auto;
-            height: calc(100vh - 130px);
-            margin-left: 0;
-            transition: margin-left 0.3s ease;
+            background: #bfd8ff;
+            opacity: 0;
+            transform: translateY(40px);
+            pointer-events: none;
+            transition: opacity 0.5s, transform 0.5s;
+            z-index: 1;
             display: none;
         }
-
-        .sidebar h1, .sidebar iframe, .sidebar img, .sidebar a:not(.title-bar), .sidebar p {
-            margin: 20px;
+        
+        .page.active, .page.exiting {
             display: block;
+            pointer-events: auto;
         }
-
-        .sidebar .btn {
-            width: calc(100% - 40px);
-            margin: 10px 20px;
+        
+        .page.active {
+            opacity: 1;
+            transform: translateY(0);
+            z-index: 2;
+        }
+        .page.exiting {
+            opacity: 0;
+            transform: translateY(40px);
+            z-index: 3;
         }
 
         .title-bar {
@@ -274,32 +294,32 @@
 
 <!-- Sidebar 1 -->
 <div class="sidebar">
-    <a href="#" class="title-bar">Online Achievements <br> (Unserious)</a>
-    <img src="images/X-Alpha.png" width="320px" height="180px">
-    <h1 class="h1">Cleared, 96.55%, For The Top 10k Worldwide</h1>
-    <iframe width="320" height="180" src="https://www.youtube.com/embed/8k2Hug_8HYM" frameborder="0" allowfullscreen></iframe>
+            <a href="#" class="title-bar">Online Achievements <br> (Unserious)</a>
+            <img src="images/X-Alpha.png" width="320px" height="180px">
+            <h1 class="h1">Cleared, 96.55%, For The Top 10k Worldwide</h1>
+            <iframe width="320" height="180" src="https://www.youtube.com/embed/8k2Hug_8HYM" frameborder="0" allowfullscreen></iframe>
 
-    <img src="images/X-Beta.png" width="320px" height="180px">
-    <h1 class="h1">Passed, 95.18%, For the Top 5k Worldwide</h1>
-    <iframe width="320" height="180" src="https://www.youtube.com/embed/UHaHkRch8k4" frameborder="0" allowfullscreen></iframe>
+            <img src="images/X-Beta.png" width="320px" height="180px">
+            <h1 class="h1">Passed, 95.18%, For the Top 5k Worldwide</h1>
+            <iframe width="320" height="180" src="https://www.youtube.com/embed/UHaHkRch8k4" frameborder="0" allowfullscreen></iframe>
 
-    <img src="images/X-Gamma.jpg" width="320px" height="180px">
-    <h1 class="h1">No Progress, for the Top 1k Worldwide</h1>
-    <h2 class="h2">(Disclaimer: Videos beyond this point are only automated replays)</h2>
-    <iframe width="320" height="180" src="https://www.youtube.com/embed/3SciCD-KJ5w" frameborder="0" allowfullscreen></iframe>
+            <img src="images/X-Gamma.jpg" width="320px" height="180px">
+            <h1 class="h1">No Progress, for the Top 1k Worldwide</h1>
+            <h2 class="h2">(Disclaimer: Videos beyond this point are only automated replays)</h2>
+            <iframe width="320" height="180" src="https://www.youtube.com/embed/3SciCD-KJ5w" frameborder="0" allowfullscreen></iframe>
 
-    <img src="images/X-Delta.jpg" width="320px" height="180px">
-    <h1 class="h1">No Progress, for the Top 500 Worldwide</h1>
-    <iframe width="320" height="180" src="https://www.youtube.com/embed/fTHwwAYox4Q" frameborder="0" allowfullscreen></iframe>
+            <img src="images/X-Delta.jpg" width="320px" height="180px">
+            <h1 class="h1">No Progress, for the Top 500 Worldwide</h1>
+            <iframe width="320" height="180" src="https://www.youtube.com/embed/fTHwwAYox4Q" frameborder="0" allowfullscreen></iframe>
 
-    <img src="images/X-Epsilon.jpg" width="320px" height="180px">
-    <h1 class="h1">No Progress, for the Top 50 Worldwide (My Goal)</h1>
-    <iframe width="320" height="180" src="https://www.youtube.com/embed/ySuXlEQ4LgA" frameborder="0" allowfullscreen></iframe>
+            <img src="images/X-Epsilon.jpg" width="320px" height="180px">
+            <h1 class="h1">No Progress, for the Top 50 Worldwide (My Goal)</h1>
+            <iframe width="320" height="180" src="https://www.youtube.com/embed/ySuXlEQ4LgA" frameborder="0" allowfullscreen></iframe>
 
-    <a href="https://osu.ppy.sh/users/36974380" target="_blank" class="btn btn-primary">Osu Profile</a>
-    <a href="https://youtu.be/KdPtNKTjihM" target="_blank" class="btn btn-success">Best Play I Set so far</a>
-    <a href="https://www.roblox.com/users/1996057306/profile" target="_blank" class="btn btn-warning">Roblox Account</a>
-    <a href="https://www.youtube.com/watch?v=BbeeuzU5Qc8" target="_blank" class="btn btn-danger">Youtube Introduction</a>
+            <a href="https://osu.ppy.sh/users/36974380" target="_blank" class="btn btn-primary w-100 my-1">Osu Profile</a>
+            <a href="https://youtu.be/KdPtNKTjihM" target="_blank" class="btn btn-success w-100 my-1">Best Play I Set so far</a>
+            <a href="https://www.roblox.com/users/1996057306/profile" target="_blank" class="btn btn-warning w-100 my-1">Roblox Account</a>
+            <a href="https://www.youtube.com/watch?v=BbeeuzU5Qc8" target="_blank" class="btn btn-danger w-100 my-1">Youtube Introduction</a>
 </div>
 
         <div class="sidebar">
@@ -332,7 +352,7 @@
 
         <!-- Main Page (About Me Page) || Page 1 -->
 
-        <div class="page" id="page0" style="display: block;">
+        <div class="page active" id="page0">
             <h1>Contact Info</h1>
             <h1 class="h1">School Email: leonnelondres@wvc.pshs.edu.ph</h1>
             <h1 class="h1">Contact Number: 09155327902</h1>
@@ -443,10 +463,16 @@
 
 function toggleSidebar(index) {
     const sidebars = document.querySelectorAll('.sidebar');
-    sidebars[index].classList.toggle('show');
+    sidebars.forEach((sidebar, i) => {
+        if (i === index) {
+            sidebar.classList.toggle('show');
+        } else {
+            sidebar.classList.remove('show');
+            sidebar.style.left = '-380px';
+        }
+    });
 
     let nextLeft = 0;
-
     sidebars.forEach(sidebar => {
         if (sidebar.classList.contains('show')) {
             sidebar.style.left = nextLeft + 'px';
@@ -455,8 +481,6 @@ function toggleSidebar(index) {
             sidebar.style.left = '-380px';
         }
     });
-
-    // Adds margin/space for sidebar opening
 
     document.querySelectorAll('.page').forEach(page => {
         page.style.marginLeft = nextLeft + 'px';
@@ -467,9 +491,20 @@ function toggleSidebar(index) {
 
 function switchPage(pageIndex) {
     const pages = document.querySelectorAll('.page');
-    pages.forEach((page, i) => {
-        page.style.display = i === pageIndex ? 'block' : 'none';
-    });
+    const current = document.querySelector('.page.active');
+    const next = pages[pageIndex];
+
+    if (current === next) return;
+
+    if (current) {
+        current.classList.remove('active');
+        current.classList.add('exiting');
+        setTimeout(() => {
+            current.classList.remove('exiting');
+        }, 500); // match transition duration
+    }
+
+    next.classList.add('active');
 }
 
     // Background Music Toggle
