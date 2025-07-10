@@ -1,1 +1,534 @@
-Hello World
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>(unserious info) for sigmas only</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>        
+    body {
+            margin: 0;
+            padding: 0;
+            background-color: #bfd8ff;
+            scrollbar-color: #bfd8ff solid;
+        }
+
+        .h1 {
+            color: #1f1e33;
+            font-size: x-large;
+        }
+
+        .h2 {
+            color: #f00000;
+            font-size: x-large;
+        }
+
+        .pp {
+            font-size: x-large;
+        }
+
+        .sigma {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .content-wrapper {
+            margin-top: 130px;
+        }
+
+        .wrapper {
+            display: flex;
+            min-height: calc(100vh - 130px);
+            flex-grow: 1;
+        }
+
+        .sidebar {
+            width: 380px;
+            height: calc(100vh - 130px);
+            overflow-y: auto;
+            background-color: #bfd8ff;
+            border-right: 8px solid #000000;
+            flex-shrink: 0;
+            position: fixed;
+            top: 130px;
+            left: -380px;
+            transition: left 0.3s ease;
+            z-index: 100;
+        }
+
+        .page {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            height: calc(100vh - 130px);
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+            display: none;
+        }
+
+        .sidebar h1, .sidebar video, .sidebar img, .sidebar a:not(.title-bar), .sidebar p {
+            margin: 20px;
+            display: block;
+        }
+
+        .sidebar .btn {
+            width: calc(100% - 40px);
+            margin: 10px 20px;
+        }
+
+        .title-bar {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 4px solid #1f1e33;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .button-container {
+            position: fixed;
+            top: 70px;
+            left: 20px;
+            right: 20px;
+            z-index: 200;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .toggle-btn {
+            padding: 12px 30px;
+            background: #000000;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            min-width: 160px;
+            white-space: nowrap;
+            text-align: center;
+            border-radius: 6px;
+            flex-shrink: 0;
+            border: 2px solid white;
+        }
+
+        .form-select {
+            padding: 12px 30px;
+            background: #000000;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            min-width: 160px;
+            white-space: nowrap;
+            text-align: center;
+            border-radius: 6px;
+            border: 2px solid white;
+        }
+
+        .button-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 130px;
+            background-color: #1f1e33;
+            z-index: 150;
+        }
+
+        /* Sets colors for the page, #1f1e33 is the color of the button bar and the scrollbars, #000000 is the color of the buttons on the button bar and the borders of the sidebars, etc. */
+        
+        html::-webkit-scrollbar,
+        body::-webkit-scrollbar,
+        .page::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        html::-webkit-scrollbar-track,
+        body::-webkit-scrollbar-track,
+        .page::-webkit-scrollbar-track {
+            background: #bfd8ff;
+        }
+
+        html::-webkit-scrollbar-thumb,
+        body::-webkit-scrollbar-thumb,
+        .page::-webkit-scrollbar-thumb {
+            background-color: #1f1e33;
+            border-radius: 6px;
+            border: 3px solid #bfd8ff;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #bfd8ff;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: #1f1e33;
+            border-radius: 5px;
+            border: 2px solid #bfd8ff;
+        }
+
+        /* Lightbox setup */
+
+        #lightbox {
+            position: fixed;
+            z-index: 999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            display: flex;
+        }
+
+        #lightbox.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+        #lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border: 4px solid white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px black;
+            transition: transform 0.3s ease;
+        }
+
+        #lightbox::after {
+            content: '✕';
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="body">
+
+<div class="alert alert-warning text-center" role="alert" style="position: fixed; top: 0; width: 100%; z-index: 300;">
+  <strong>Disclaimer:</strong> The website works best at <strong>80% zoom</strong>. It is also <strong>not mobile friendly</strong>.
+</div>
+
+<div class="button-bar"></div>
+
+<div class="button-container">
+    <button class="toggle-btn" onclick="toggleSidebar(0)">Personal Achievements and Online Credentials</button>
+    <button class="toggle-btn" onclick="toggleSidebar(1)">Short Unserious Introduction</button>
+    <button class="toggle-btn" onclick="toggleSidebar(2)">Continuation of Short Unserious Introduction</button>
+
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <button class="toggle-btn" onclick="toggleMusic()">Toggle Music</button>
+        <select id="music-select" class="form-select" onchange="changeMusic(this.value)">
+            <option value="bgmusic.mp3">Left Ear Mozart 2x Speed | Right Ear The Bible in Chinese</option>
+            <option value="zeta.mp3">Dan ~ REFORM ~ FINAL - ZETA</option>
+            <option value="eta.mp3">Dan ~ REFORM ~ FINAL - ETA</option>
+            <option value="happybday.mp3">Happy Birthday Song</option>
+            <option value="daddyissues.mp3">The Neighborhood - Daddy Issues</option>
+            <option value="sweaterweather.mp3">The Neighborhood - Sweater Weather</option>
+            <option value="parthyanthem.mp3">Arctic Monkeys - No. 1 Party Anthem</option>
+            <option value="slowdancinginthedark.mp3">Joji - SLOW DANCING IN THE DARK</option>
+            <option value="thebigblack.mp3">The Quick Brown Fox - The Big Black</option>
+            <option value="1f1e33.mp3">Camellia - #1f1e33</option>
+        </select>
+    </div>
+
+    <button class="toggle-btn" onclick="switchPage(0)">About Me</button>
+    <button class="toggle-btn" onclick="switchPage(1)">Misc. Interests</button>
+    <button class="toggle-btn" onclick="switchPage(2)">Osu Mania Stuff</button>
+</div>
+
+<div class="background-container"><div class="bg bg1"></div></div>
+
+<div class="content-wrapper"><div class="wrapper">
+
+<!-- Sidebar 1 -->
+<div class="sidebar">
+    <a href="#" class="title-bar">Online Achievements <br> (Unserious)</a>
+    <img src="images/X-Alpha.png" width="320px" height="180px">
+    <h1 class="h1">Cleared, 96.55%, For The Top 10k Worldwide</h1>
+    <video width="320" height="180" controls><source src="videos/alphavid.mp4" type="video/mp4"></video>
+
+    <img src="images/X-Beta.png" width="320px" height="180px">
+    <h1 class="h1">Passed, 95.18%, For the Top 5k Worldwide</h1>
+    <video width="320" height="180" controls><source src="videos/betavid.mp4" type="video/mp4"></video>
+
+    <img src="images/X-Gamma.jpg" width="320px" height="180px">
+    <h1 class="h1">No Progress, for the Top 1k Worldwide</h1>
+    <h2 class="h2">(Disclaimer: Videos beyond this point are only automated replays)</h2>
+    <video width="320" height="180" controls><source src="videos/gammavid.mp4" type="video/mp4"></video>
+
+    <img src="images/X-Delta.jpg" width="320px" height="180px">
+    <h1 class="h1">No Progress, for the Top 500 Worldwide</h1>
+    <video width="320" height="180" controls><source src="videos/deltavid.mp4" type="video/mp4"></video>
+
+    <img src="images/X-Epsilon.jpg" width="320px" height="180px">
+    <h1 class="h1">No Progress, for the Top 50 Worldwide (My Goal)</h1>
+    <video width="320" height="180" controls><source src="videos/epsilonvid.mp4" type="video/mp4"></video>
+
+    <a href="https://osu.ppy.sh/users/36974380" target="_blank" class="btn btn-primary">Osu Profile</a>
+    <a href="https://youtu.be/KdPtNKTjihM" target="_blank" class="btn btn-success">Best Play I Set so far</a>
+    <a href="https://www.roblox.com/users/1996057306/profile" target="_blank" class="btn btn-warning">Roblox Account</a>
+    <a href="https://www.youtube.com/watch?v=BbeeuzU5Qc8" target="_blank" class="btn btn-danger">Youtube Introduction</a>
+</div>
+
+        <div class="sidebar">
+            <a href="#" class="title-bar">IRL Achievements <br> (Unserious)</a>
+            <img src="images/pshs.png" width="320px" height="320px">
+            <h1 class="h1">I went to Oton Central Elementary School for my elementary years. <br> I then somehow got into Philippine Science High School - Western Visayas Campus.</h1>
+
+            <img src="images/writingfire.gif" width="320px" height="320px">
+            <h1 class="h1">I am an avid writer <br> (creative writing+journalism) <br> and won 4th Place in a Regional Journalism Contest at around Grade 5. <br> I only recently began discovering my interests since I only tried my best academically not long ago</h1>
+
+            <img src="images/typingemoji.gif" width="320px" height="320px">
+            <h1 class="h1">My interests are hobbies such as coding(Java, Html, Php, etc.) <br> And modding games which I learned all by myself.</h1>
+
+            <h1 class="h1">Also to note as to why i can never be allowed to drive vvvvvvvvvvvvvvvvvvvvvvvvvvv</h1>
+            <img src="https://media1.tenor.com/m/qgTaEj1PFxIAAAAd/open-season-shaw-deer-run-over-meme.gif" alt="bwaaa" class="sigma">
+        </div>
+
+<div class="sidebar">
+            <a href="#" class="title-bar">Personal Information <br> (somewhat serious)</a>
+            <img src="images/myaddressongooglemaps.jpg" width="320px" height="640px">
+            <h1 class="h1">I live in Brgy. Trapiche, Oton, Iloilo. I also apparently live near the "Airport Elementary School".</h1>
+
+            <img src="images/ocesspedreunionpic.jpg" width="320px" height="250px">
+            <h1 class="h1">I am currently 16 years old, my birthday is on February 19.  <br> And I am one of three people from our elementary class to get into Philsci.</h1>
+            <h1 class="h1">(if you cannot tell, i'm the person encircled)</h1>
+
+            <img src="images/mysexuality.jpg" width="320px" height="250px">
+            <h1 class="h1">Believe it or not, I am bisexual.(this is not me but you get the idea)</h1>
+        </div>
+
+        <!-- Main Page (About Me Page) || Page 1 -->
+
+        <div class="page" id="page0" style="display: block;">
+            <h1>Contact Info</h1>
+            <h1 class="h1">School Email: leonnelondres@wvc.pshs.edu.ph</h1>
+            <h1 class="h1">Contact Number: 09155327902</h1>
+            <h1 class="h1">Facebook Account: Renzo Londres</h1>
+            <img src="images/renzo.jpg" class="rounded-circle" width="320px" height="320px" alt="Me">
+            <h1 class="h1">Me (Leonne Renzo F. Londres)</h1>
+            <br><br>
+            <h1>About Me</h1>
+            <h1 class="h1">Age: 16 <br> Birthday: February 19</h1>
+            <h1 class="h1">Education: Junior High School (Moving up to Senior High School)</h1>
+            <br>
+            <h1 class="h1">I am interested in fields such as Computer Science via coding and modding applications</h1>
+            <br>
+            <h1 class="h1">As well as in certain aspects of Robotics</h1>
+            <br>
+            <h1>Academic Achievements</h1>
+            <h1 class="h1">4th Place in the Regional Journalism Contest in the Science and Technology English Category (Grade 5)</h1>
+            <br>
+            <h1 class="h1">Participation in Philsci's Pasiklaban Contest (Grade 8)</h1>
+            <br>
+            <h1 class="h1">1st Place in Philsci's Pueblo Science Camp Robotic Competition (Grade 10)</h1>
+            <br>
+            <h1>Skills</h1>
+            <h1 class="h1"> - Willingness to pursue</h1>
+            <h1 class="h1"> - Critical Thinking/Solution Explorer</h1>
+            <h1 class="h1"> - Cooperation with others</h1>
+            <h1 class="h1"> - Maturity</h1>
+            <h1>Medical Details (just in case)</h1>
+            <h1 class="h1"> Blood Type - O-</h1>
+            <h1 class="h1"> Periodically Low Blood Sugar</h1>
+            <h1 class="h1"> Lactose Intolerant</h1>
+            <h1 class="h1"> Nearsighted(by a value of 500 on both eyes) and minor Astigmatism</h1>
+        </div>
+
+        <!-- Interests Page (stuff like hsr) || Page 2 -->
+
+        <div class="page" id="page1">
+            <h1>Interests</h1>
+            <p class="h1">One of the games I like is Honkai: Star Rail</p>
+            <p class="pp"> A friend introduced me to the game and for years I've been heavily invested with it until now. <br> Especially since recently, the game has undergone so much quality changes and one-upped everyone's expectations</p>
+            <img src="images/asatpramad1.jpg" alt="Asat Pramad" width="1080px" height="720px">
+            <img src="images/asatpramad2.jpg" alt="Asat Pramad" width="1080px" height="720px">
+            <p class="pp">this character hasn't even been introduced in the game yet, only announced for hype <br> The name of the character is Asat Pramad btw</p>
+            <br>
+            <img src="images/celenova1.jpg" alt="Celenova" width="1080px" height="720px">
+            <img src="images/celenova2.png" alt="Celenova" width="1080px" height="720px">
+            <p class="pp">as well as this character(my personal favourite) named Celenova</p>
+            <br>
+            <img src="images/zephyro.gif" alt="Zephyro Gif" width="1080px" height="720px">
+            <img src="images/zephyro.png" alt="Zephyro" width="1080px" height="720px">
+            <br>
+            <video width="1080px" height="720px" controls>
+                <source src="videos/zephyro.mp4" type="video/mp4">
+            </video>
+            <p class="pp">not to forget this person that quite literally is a "One-Man Army", not the girl on the video btw <br> and his name is Zephyro and the character at the beginning for like a split second is Acheron but that's not as important as of the current update</p>
+            <br>
+            <br>
+            <br>
+            <p class="pp">yeah, cool right? if you want to know more about them, watch the video below. (or if you want the best experience, watch it on Youtube with captions) </p>
+            <a href="https://youtu.be/io9W-dvBTog" class="pp" target="_blank">https://youtu.be/io9W-dvBTog</a>
+            <br>
+            <video width="1080px" height="720px" controls>
+                <source src="videos/lordravagers.mp4" type="video/mp4">
+            </video>
+            <p class="pp">also if you can, go play star rail</p>
+            <a href="https://hsr.hoyoverse.com/en-us/" class="pp" target="_blank">https://hsr.hoyoverse.com/en-us/</a>
+        </div>
+
+        <!-- Dedicated Osu Mania Page !! Page 3 -->
+
+                <div class="page" id="page2">
+            <h1>My Osu Mania Stuff</h1>
+            <p class="h1">Here lies most of my Osu! Mania stuff</p>
+            <p class="h1">But they're mainly my profile and achievements.</p>
+
+            <br><br>
+            
+            <img src="images/osuprofile.png" width="1080px" height="720px">
+
+            <br><br>
+
+            <video width="1080px" height="720px" controls>
+                <source src="videos/viyellastears.mp4" type="video/mp4">
+            </video>
+            <p class="h1">One of my best plays on a ranked map (filled with patterns I am not used to)</p>
+            <br><br><br>
+
+            <video width="1080px" height="720px" controls>
+                <source src="videos/jackachievement.mp4" type="video/mp4">
+            </video>
+            <p class="h1">Arguably my best performance on a jackmap (its like, multiple consecutive notes on the same column)</p>
+            <br><br><br>
+
+            <video width="1080px" height="720px" controls>
+                <source src="videos/techachievement.mp4" type="video/mp4">
+            </video>
+            <p class="h1">Arguably my best performance on a technical map (tech is like, uncomfortable patterns that screw up your accuracy)</p>
+            <br><br><br>
+
+            <video width="1080px" height="720px" controls>
+                <source src="videos/speedachievement.mp4" type="video/mp4">
+            </video>
+            <p class="h1">Arguably my best performance on a speed map, which is the pattern i'm not very skilled at (u cant google this, but you'd understand the pattern when watching the vid)</p>
+            <br><br><br>
+
+            <video width="1080px" height="720px" controls>
+                <source src="videos/staminaachievement.mp4" type="video/mp4">
+            </video>
+            <p class="h1">Arguably my best performance on a stamina map (basically tests how long you can go with stamina draining patterns)</p>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    
+// Sidebars Function
+
+function toggleSidebar(index) {
+    const sidebars = document.querySelectorAll('.sidebar');
+    sidebars[index].classList.toggle('show');
+
+    let nextLeft = 0;
+
+    sidebars.forEach(sidebar => {
+        if (sidebar.classList.contains('show')) {
+            sidebar.style.left = nextLeft + 'px';
+            nextLeft += 380;
+        } else {
+            sidebar.style.left = '-380px';
+        }
+    });
+
+    // Adds margin/space for sidebar opening
+
+    document.querySelectorAll('.page').forEach(page => {
+        page.style.marginLeft = nextLeft + 'px';
+    });
+}
+
+    // Main Pages Function
+
+function switchPage(pageIndex) {
+    const pages = document.querySelectorAll('.page');
+    pages.forEach((page, i) => {
+        page.style.display = i === pageIndex ? 'block' : 'none';
+    });
+}
+
+    // Background Music Toggle
+
+function toggleMusic() {
+    const audio = document.getElementById('bg-music');
+    if (audio.paused) {
+        audio.play();
+    } else {
+        audio.pause();
+    }
+}
+
+    // Music Changer Function
+
+
+    function changeMusic(filename) {
+        const audio = document.getElementById('bg-music');
+        const wasPlaying = !audio.paused;
+        audio.src = "audio/" + filename;
+        audio.load();
+        if (wasPlaying) audio.play();
+    }
+
+
+
+    // Image Lightbox Stuff
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('click', () => {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = img.src;
+            lightbox.classList.add('show');
+        });
+    });
+    
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('show');
+    }
+
+</script>
+
+<audio id="bg-music" autoplay loop>
+    <source src="audio/bgmusic.mp3" type="audio/mp3">
+</audio>
+
+<div id="lightbox" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" alt="Enlarged image">
+</div>
+
+</body>
+</html>
